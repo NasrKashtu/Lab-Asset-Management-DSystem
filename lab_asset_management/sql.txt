@@ -1,0 +1,46 @@
+INSERT INTO users (username, password, role) VALUES 
+('admin', MD5('admin123'), 'admin'),
+('researcher1', MD5('researcher123'), 'researcher'),
+('technician1', MD5('technician123'), 'technician'),
+('student1', MD5('student123'), 'student');
+
+INSERT INTO assets (name, type, purchase_date, calibration_status) VALUES
+('Microscope', 'Equipment', '2023-01-15', 'calibrated'),
+('Chemical A', 'Chemical', '2023-02-20', 'due'),
+('Centrifuge', 'Equipment', '2023-03-05', 'overdue'),
+('Beaker', 'Supply', '2023-04-12', 'calibrated');
+
+INSERT INTO asset_requests (user_id, request_date, status) VALUES
+(2, '2023-05-01', 'pending'),
+(3, '2023-05-02', 'approved'),
+(4, '2023-05-03', 'denied');
+
+INSERT INTO request_assets (request_id, asset_id) VALUES
+(1, 1), -- Researcher requested Microscope
+(1, 2), -- Researcher requested Chemical A
+(2, 3), -- Technician requested Centrifuge
+(3, 4); -- Student requested Beaker
+
+INSERT INTO movements (asset_id, movement_date, from_lab_id, to_lab_id) VALUES
+(1, '2023-05-05', 101, 102), -- Microscope moved from Lab 101 to Lab 102
+(2, '2023-05-06', 103, 104), -- Chemical A moved from Lab 103 to Lab 104
+(3, '2023-05-07', 105, 106); -- Centrifuge moved from Lab 105 to Lab 106
+
+INSERT INTO maintenance_records (asset_id, maintenance_date, details) VALUES
+(1, '2023-05-10', 'Microscope calibration completed'),
+(2, '2023-05-11', 'Chemical A inventory checked'),
+(3, '2023-05-12', 'Centrifuge maintenance performed');
+
+INSERT INTO usage_logs (asset_id, user_id, usage_date, details) VALUES
+(1, 2, '2023-05-15', 'Microscope used for sample analysis'),
+(2, 3, '2023-05-16', 'Chemical A used for experiment'),
+(3, 4, '2023-05-17', 'Centrifuge used for separation process');
+
+INSERT INTO disposal_requests (asset_id, request_date, disposal_method, status) VALUES
+(2, '2023-05-20', 'Incineration', 'pending'), -- Disposal request for Chemical A
+(3, '2023-05-21', 'Recycling', 'approved'); -- Disposal request for Centrifuge
+
+INSERT INTO reports (user_id, report_type, generated_date) VALUES
+(1, 'Asset Utilization', '2023-05-25'),
+(2, 'Maintenance Costs', '2023-05-26'),
+(3, 'Compliance Metrics', '2023-05-27');
