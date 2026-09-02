@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
-$username = "root";
-$password = "";
+$username = "lab_asset_app";
+$password = "lab_asset_app_pw";
 $dbname = "lab_asset_management";
 
 // Create connection

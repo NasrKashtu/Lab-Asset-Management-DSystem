@@ -21,50 +21,76 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $sql = "SELECT * FROM asset_requests";
 $result = $conn->query($sql);
+
+$page_title = 'Procurement Management';
+include 'includes/head.php';
+$inputClass = 'w-full rounded-xl border border-gray-300 bg-gray-50 px-3.5 py-2.5 text-sm outline-none transition focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/30';
+$labelClass = 'mb-1.5 block text-sm font-medium text-gray-700';
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Procurement Management</title>
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
-</head>
-<body>
-<div class="header">
-    <h1>Procurement Management</h1>
-</div>
-<div class="container">
-    <h2>Add Procurement Request</h2>
-    <form method="post" action="">
-        <label for="request_date">Request Date:</label>
-        <input type="date" id="request_date" name="request_date" required>
-        <label for="status">Status:</label>
-        <select id="status" name="status">
-            <option value="pending">Pending</option>
-            <option value="approved">Approved</option>
-            <option value="denied">Denied</option>
-        </select>
-        <input type="submit" value="Add Procurement Request">
-        <?php if (isset($message)) { echo "<p style='color:green;'>$message</p>"; } ?>
-    </form>
+<main class="mx-auto max-w-6xl px-6 py-10">
+    <div class="mb-8 flex items-center gap-3">
+        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary"><?php echo icon('shopping-cart', 'h-6 w-6'); ?></span>
+        <div>
+            <h1 class="text-2xl font-semibold text-gray-900">Procurement Management</h1>
+            <p class="mt-1 text-sm text-gray-500">Submit and review requests for new lab assets.</p>
+        </div>
+    </div>
 
-    <h2>Procurement Requests</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>User ID</th>
-            <th>Request Date</th>
-            <th>Status</th>
-        </tr>
-        <?php while ($row = $result->fetch_assoc()) { ?>
-            <tr>
-                <td><?php echo $row['id']; ?></td>
-                <td><?php echo $row['user_id']; ?></td>
-                <td><?php echo $row['request_date']; ?></td>
-                <td><?php echo $row['status']; ?></td>
-            </tr>
-        <?php } ?>
-    </table>
-</div>
-</body>
-</html>
+    <?php if (isset($message)) { ?>
+        <div class="mb-6 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"><?php echo $message; ?></div>
+    <?php } ?>
+
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div class="lg:col-span-1">
+            <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                <h2 class="mb-4 text-base font-semibold text-gray-900">Add Procurement Request</h2>
+                <form method="post" action="" class="space-y-4">
+                    <div>
+                        <label for="request_date" class="<?php echo $labelClass; ?>">Request Date</label>
+                        <input type="date" id="request_date" name="request_date" required class="<?php echo $inputClass; ?>">
+                    </div>
+                    <div>
+                        <label for="status" class="<?php echo $labelClass; ?>">Status</label>
+                        <select id="status" name="status" class="<?php echo $inputClass; ?>">
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="denied">Denied</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="flex w-full items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-600 active:scale-[0.98]"><?php echo icon('plus', 'h-4 w-4'); ?> Add Procurement Request</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2">
+            <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">ID</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">User ID</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">Request Date</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <?php if ($result->num_rows === 0) { echo empty_state_row(4, 'No procurement requests yet.'); } ?>
+                        <?php while ($row = $result->fetch_assoc()) { ?>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3 text-gray-500">#<?php echo $row['id']; ?></td>
+                                <td class="px-4 py-3 font-medium text-gray-900">#<?php echo $row['user_id']; ?></td>
+                                <td class="px-4 py-3 text-gray-600"><?php echo htmlspecialchars($row['request_date']); ?></td>
+                                <td class="px-4 py-3"><?php echo status_chip($row['status']); ?></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<?php include 'includes/foot.php'; ?>
